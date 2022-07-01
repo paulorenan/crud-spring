@@ -1,9 +1,11 @@
 package com.renan.crudspring.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,5 +50,16 @@ public class CourseController {
         courseToUpdate.setName(course.getName());
         courseToUpdate.setCategory(course.getCategory());
         return courseRepository.save(courseToUpdate);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Course> delete(@PathVariable Long id) {
+        Optional<Course> courseToDelete = courseRepository.findById(id);
+        if (courseToDelete.isPresent()) {
+            courseRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
